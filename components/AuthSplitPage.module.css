@@ -1,0 +1,768 @@
+/* components/AuthSplitPage.module.css — the full-page Sign In / Sign Up
+   split layout. Existing design tokens throughout (no new colors) —
+   the only new visual idea here is the glassmorphism, raised "Explore"
+   button floating on the showcase image, which is the one place on
+   this page an actual photo sits behind UI chrome for a frosted-glass
+   effect to mean anything; the form pane itself stays a plain, fully
+   opaque surface for maximum legibility, not blurred. */
+
+/* min-height subtracts the site's own sticky header instead of a bare
+   100dvh: this page renders inside <main>, a sibling of <header> (not a
+   descendant), so naively using 100dvh here stacks on top of the
+   header's own rendered height and makes the page taller than the
+   viewport by exactly that amount on load — pushing everything below
+   it down for no reason. --header-height (4rem) is
+   a real global token; 2.75rem is the category row's height, duplicated
+   here (not read via var()) for the same reason
+   app/product/[id]/page.module.css's sticky offset already duplicates
+   it: that value is a custom property scoped to .siteHeader's own
+   subtree in Navbar.module.css, not visible to a sibling file.
+
+   The extra + 2px: the header's actual rendered height is 2px more
+   than --header-height + 2.75rem alone accounts for (Navbar.module.css
+   has a 1px border-bottom on .siteHeader AND a 1px border-top on the
+   category row, neither captured by either token) — confirmed by
+   direct measurement (110px rendered vs. 108px from the two tokens).
+   Invisible until desktop's image pane started stretching to the exact
+   bottom edge of this row's height (its own thumbnail row below the
+   photo now shares that column, see .imageThumbRow), at which point
+   that 2px surfaced as a real (if tiny) forced scroll on short desktop
+   viewports. */
+.page {
+  min-height: calc(100dvh - var(--header-height) - 2.75rem - 2px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Stacked on mobile AND tablet (form/info first, image band below,
+   thumbnails below that — the primary task shouldn't require scrolling
+   past a decorative banner first, and a tablet-width image reads better
+   full-width than squeezed into a half-width column beside the form
+   anyway); side-by-side only from the desktop breakpoint (64rem), where
+   DOM order (formPane, then imagePane) naturally lands form-left/
+   image-right to match the reference layout, with no CSS `order`
+   reshuffling needed. */
+.formPane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-lg);
+  background: var(--color-surface);
+  flex: 1;
+}
+
+/* Content-sized (no explicit height) below the desktop breakpoint —
+   .imageFrame below carries the actual "how tall is the photo" number
+   now (a flat 400px, by request), and .showcaseHeader above it and
+   .imageThumbRow below it just add their own natural height on top,
+   rather than being carved out of a fixed budget assigned to this
+   pane as a whole. display:flex column at every width, not just from
+   64rem up — this pane always lays out header/image/thumbnails as a
+   column, it's only how TALL the image itself is that changes at the
+   desktop breakpoint (see .imageFrame's own media override below). */
+.imagePane {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Wraps the photo/overlay/Explore button/carousel-arrows. A flat
+   height below the desktop breakpoint (not flex-grow against a fixed
+   parent height, since .imagePane itself is content-sized now — see
+   its own comment) — from 64rem up this switches to flex:1 1 auto
+   instead, filling whatever's left in .imagePane's share of the row
+   after .showcaseHeader and .imageThumbRow, which is what actually
+   produces the "shorten the image" effect on desktop: the photo gives
+   up exactly however much room those two need, nothing more. */
+.imageFrame {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  flex-shrink: 0;
+  overflow: hidden;
+  /* Larger than --radius-md (0.5rem) on purpose — this is a full-width
+     hero-scale photo, not a form control or a small card, and the
+     project's existing radius scale tops out at a size tuned for
+     those smaller elements. overflow:hidden above clips the photo
+     itself (and the Explore button, since it's a child of this) to
+     match. */
+  border-radius: 1rem;
+}
+
+/* The aria-hidden="true" wrapper around the fill Image/.imageOverlay,
+   one level inside .imageFrame above — same size as .imageFrame itself
+   (its own children are all position: absolute, so without an explicit
+   size it would collapse to nothing). next/image's `fill` requires its
+   DIRECT parent to be positioned; this div was previously unstyled
+   (position: static), so `fill`'s absolute positioning was skipping
+   past it to .imageFrame instead — visually identical, but next/image
+   warns because that's relying on an ancestor two levels up rather
+   than this actual parent. */
+.imageInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 64rem) {
+  .page {
+    flex-direction: row;
+  }
+
+  .formPane {
+    flex: 1 1 50%;
+    min-width: 0;
+  }
+
+  .imagePane {
+    flex: 1 1 50%;
+  }
+
+  .imageFrame {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+}
+
+.formInner {
+  width: 100%;
+  max-width: 26rem;
+  /* .formInner is a flex item inside .formPane, whose default
+     min-width: auto would otherwise let any descendant's intrinsic
+     content width leak through and widen this item — cheap defensive
+     default for a flex child, same reasoning ProductGallery's own
+     thumbnail row needed (see ProductGallery.module.css's .thumbList),
+     even though the thumbnail row itself no longer lives in here. */
+  min-width: 0;
+}
+
+/* No page-local logo — Navbar already shows one at the very top of
+   every page (including this one), so repeating it here would just be
+   the same brand mark twice in one viewport for no added clarity. */
+.heading {
+  font-size: 1.5rem;
+  color: var(--color-ink);
+  margin: 0 0 var(--space-2);
+}
+
+.subtext {
+  margin: 0 0 var(--space-4);
+  color: var(--color-muted-dark);
+  font-size: 0.9rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* Wraps the Password label together with "Forgot password?" on the
+   same line (space-between) — only the password field needs this, so
+   it's not folded into .field itself, which every other field also
+   uses as a plain single-column stack. */
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* A real <button>, not an <a> — there's nowhere to navigate to, this
+   only flips local form state (see enterForgotMode). Styled to read as
+   a link (matches globals.css's own `a` treatment), which is also why
+   this deliberately opts out of the global 44px button min-height:
+   forced to that height it would either dominate the label row it
+   sits in or need awkward negative margins to avoid pushing everything
+   below it down. Vertical padding (not the global min-height) gives it
+   a bit more than its own text height to tap, which is the same
+   "inline text link" allowance real sign-in forms elsewhere already
+   rely on for a control this size, immediately next to a field label.
+*/
+.forgotBtn {
+  min-height: auto;
+  padding: var(--space-1) 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.forgotBtn:hover {
+  color: var(--color-primary-hover);
+}
+
+.input {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  width: 100%;
+}
+
+.input:hover {
+  border-color: var(--color-border-strong);
+}
+
+/* Supplements the error message below (role="alert", associated via
+   aria-describedby) — never the only signal. */
+.input[aria-invalid="true"] {
+  border-color: var(--color-danger-text);
+}
+
+/* Icon + light-tinted banner, not bare red text — same treatment (and
+   same reasoning) as AuthModal's .authAlert in RequestDialogs.module.css:
+   a whole-form validation result deserves more visual weight than a
+   quiet inline note. No new color: a light tint/border of the same
+   --color-danger-text already used for error text elsewhere. */
+.authAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(211, 47, 47, 0.08);
+  border: 1px solid rgba(211, 47, 47, 0.35);
+  border-radius: var(--radius-sm);
+  color: var(--color-danger-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.authAlertIcon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* The Forgot-password code stage's "here's your demo code" banner —
+   same quiet, boxed-off treatment as .note below (informational, not
+   an error, so it doesn't borrow .authAlert's red), plus a leading icon
+   the same way .note's own icon variant elsewhere in this app pairs
+   text with a small glyph. Matches app/profile/page.module.css's own
+   .demoOtpBanner in spirit (same "demo mode" honesty), not reused
+   directly since that's a different CSS Module. */
+.demoOtpBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-tint);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-muted-dark);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.demoOtpBanner strong {
+  color: var(--color-ink);
+  letter-spacing: 0.05em;
+}
+
+.submitBtn {
+  min-height: 44px;
+  margin-top: var(--space-2);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.submitBtn:hover {
+  background: var(--color-primary-hover);
+}
+
+.switchLink {
+  margin: var(--space-3) 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-muted-dark);
+}
+
+/* The forgotMode "Back to sign in" control rendered in .switchLink's
+   place — a real <button> (exits local form state, nothing to
+   navigate to) styled to match the <Link> the other two branches of
+   that same paragraph use, so switching between them doesn't change
+   how the row looks otherwise. Same 44px min-height opt-out reasoning
+   as .forgotBtn above — full-width here would look like a second
+   submit button, which this deliberately isn't. */
+.switchLinkBtn {
+  min-height: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: inherit;
+  font-weight: 600;
+}
+
+.switchLinkBtn:hover {
+  color: var(--color-primary-hover);
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  color: var(--color-muted-dark);
+  font-size: 0.78rem;
+}
+
+.note p {
+  margin: 0;
+}
+
+.noteIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ---- Category thumbnail strip ----
+   Single scrollable row (not wrapping to a second line) — same
+   technique as ProductGallery.module.css's .thumbList: padding + a
+   matching negative margin gives the focus ring room inside the
+   scroll-clipping boundary instead of getting cut off by it. Only
+   rendered in one place now (below the showcase image, .imageThumbRow
+   further down) at every breakpoint — there used to also be a
+   duplicate ".thumbRow" variant inline in the form pane for mobile/
+   tablet; see AuthSplitPage.tsx's comment on why that was removed. */
+
+/* 44px — the project's standard minimum touch target, not the earlier
+   56px (which cost more vertical space than this secondary control
+   should spend on a form that needs to stay compact).
+
+   No border/box around the thumbnail — "which one is active" is a
+   short bar floating below it instead (the ::after further down), the
+   same visual language a lot of sites use for an active nav link/tab,
+   not a boxed icon. It's a separate positioned element with a real gap
+   underneath the button, not literally the button's own border sitting
+   flush against the image — deliberately, so the indicator doesn't read
+   as touching/cutting into the photo.
+
+   Deliberately NO overflow:hidden here (an earlier version had it, to
+   clip the photo to this box's rounded corners) — that also clipped
+   this element's OWN ::after underline below, which sits outside this
+   44x44 box on purpose (the "real gap underneath" above). The photo is
+   clipped by .thumbImageClip instead now — a separate inner wrapper —
+   so this box can stay overflow-visible for the underline while the
+   photo still gets its rounded corners. This was a genuine, easy-to-miss
+   bug: the underline had valid, correct CSS (real color, real position,
+   opacity:1 — confirmed by computed style) and still never actually
+   painted on screen, because it was being silently clipped by its own
+   parent the whole time. */
+.thumbBtn {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+}
+
+/* The actual clip boundary for the photo, now separate from .thumbBtn
+   itself — see the comment above for why. */
+.thumbImageClip {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.thumbBtn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 3px;
+  border-radius: 999px;
+  background: transparent;
+  transition: background-color 120ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .thumbBtn:hover::after {
+    background: var(--color-primary-light);
+  }
+}
+
+.thumbBtnActive::after {
+  background: var(--color-primary);
+}
+
+/* box-shadow, not outline: confirmed earlier in this project (see
+   ProductGallery.module.css) that outline's border-radius handling is
+   only an approximation in Chromium/Firefox and visibly distorts a
+   small, tightly-rounded square like this into a blob at non-100%
+   zoom/display scaling — box-shadow always traces border-radius
+   exactly. This is keyboard focus specifically, a different concern
+   from the underline above (which shows which image is current
+   regardless of focus), and stays regardless of that active state. */
+.thumbBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Real signal (SHOWCASE_HAS_DEAL in AuthSplitPage.tsx, derived from the
+   same isDealProduct rule ProductCard's own badge uses), not decoration
+   — the button's aria-label carries "— has deals" too, this dot isn't
+   the only way the fact reaches anyone. Positioned INSIDE the 44px
+   button bounds (not overhanging the corner) on purpose: .thumbBtn uses
+   overflow:hidden to clip its image to the rounded square, which would
+   silently clip a badge positioned outside that box. A solid white ring
+   keeps it legible over whatever photo happens to be underneath it, not
+   just this catalog's current images. */
+.dealBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-danger);
+  border: 1.5px solid #fff;
+  pointer-events: none;
+}
+
+/* ---- Showcase header (category name + count, above the image) ---- */
+
+/* Real page text now, not white text overlaid on the photo — centered
+   to match the reference layout, sized down a step from .heading so
+   the two don't visually compete on a narrow screen where both are
+   stacked in the same column. */
+.showcaseHeader {
+  padding: var(--space-4) var(--space-4) 0;
+  text-align: center;
+}
+
+@media (min-width: 64rem) {
+  .showcaseHeader {
+    padding: var(--space-6) var(--space-6) 0;
+  }
+}
+
+.showcaseCategory {
+  margin: 0 0 2px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.showcaseMeta {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted-dark);
+}
+
+/* ---- Showcase image pane ---- */
+
+.showcaseImage {
+  /* contain, not cover — cover was cropping parts of the photo out to
+     fill the box exactly; this shows the complete image instead,
+     letterboxed within the same box rather than changing the box's
+     own size. */
+  object-fit: contain;
+  /* Plays once per selection (key={active.category} remounts it) —
+     opacity-only, same lightweight technique ProductGallery uses for
+     its own main-image switch. prefers-reduced-motion is handled
+     globally (globals.css forces every animation duration to ~0). */
+  animation: showcaseFade 250ms ease-out;
+}
+
+@keyframes showcaseFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Brand-blue tint at the top fading into a dark base — ties the
+   showcase into the site's own color scheme and keeps the glass
+   Explore button legible over the photo, without flattening the image
+   itself under a heavy uniform overlay. */
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(13, 110, 253, 0.18) 0%, rgba(9, 13, 26, 0.05) 45%, rgba(8, 13, 26, 0.78) 100%);
+}
+
+/* The one deliberate glassmorphism element on this page — a frosted,
+   raised button floating over a real photo, which is the case that
+   effect is actually for (unlike applying it to a plain background,
+   which the AuthModal redesign explicitly avoided). Always links to
+   the active category's own listing page, sorted by trending (see the
+   Link's href in AuthSplitPage.tsx) — never conditional, there's
+   always something real to send someone to.
+
+   backdrop-filter/-webkit-backdrop-filter are NOT declared here on
+   purpose — confirmed by isolated testing that Turbopack's CSS pipeline
+   (Next.js 16 always uses Lightning CSS for Turbopack, no opt-out)
+   silently drops both from the compiled output even in a minimal,
+   otherwise-unrelated rule, despite the browser fully supporting the
+   property (CSS.supports confirmed true) and the project's default
+   browserslist target long since supporting it. They're applied as an
+   inline style on the element instead (see AuthSplitPage.tsx), which
+   bypasses that pipeline entirely and does render correctly.
+
+   The "3D" read comes from three things together: a semi-opaque tinted
+   fill (kept LOW — 0.28 base — specifically so the photo underneath
+   still reads through; an earlier version at 0.55+ looked like a plain
+   solid-blue button against a dark photo and lost the glass read
+   entirely), an inset top highlight (a bright 1px line along the top
+   edge, like light catching a bevel) paired with a darker inset along
+   the bottom, and a real drop shadow underneath. Hover/active lift the
+   button a couple of px and deepen the shadow to sell the same effect
+   as a press, WITHOUT meaningfully changing the fill's opacity — that's
+   what actually caused the "turns all blue on hover" problem before:
+   the fill itself was the thing changing on hover, not just the shadow. */
+.exploreBtn {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-4);
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(13, 110, 253, 0.28);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(8, 13, 26, 0.25),
+    0 8px 20px rgba(8, 13, 26, 0.35);
+  transition:
+    transform 120ms ease-out,
+    box-shadow 120ms ease-out,
+    background 120ms ease-out;
+}
+
+.exploreBtn:hover {
+  background: rgba(13, 110, 253, 0.34);
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(8, 13, 26, 0.25),
+    0 12px 24px rgba(8, 13, 26, 0.4);
+}
+
+.exploreBtn:active {
+  transform: translateX(-50%) translateY(0);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 2px 4px rgba(8, 13, 26, 0.3),
+    0 4px 10px rgba(8, 13, 26, 0.3);
+}
+
+.exploreBtn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px var(--color-focus),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 8px 20px rgba(8, 13, 26, 0.35);
+}
+
+@media (min-width: 64rem) {
+  .exploreBtn {
+    bottom: var(--space-6);
+  }
+}
+
+/* Carousel Previous/Next — same circular-overlay pattern already
+   proven on the product-detail gallery's own main image
+   (ProductGallery.module.css's .imageNavBtn): a child of the
+   positioned pane (not an absolutely-positioned sibling floated on
+   top), so it stays reachable/clickable and doesn't need any special
+   handling to sit above the photo. */
+.carouselBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-ink);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.carouselBtnPrev {
+  left: var(--space-3);
+}
+
+.carouselBtnNext {
+  right: var(--space-3);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .carouselBtn:hover {
+    color: var(--color-primary);
+  }
+}
+
+.carouselBtn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+/* ---- Thumbnail row below the image ---- */
+
+/* Visible at every width now (there used to be a separate "inline in
+   the form" variant for mobile/tablet — see AuthSplitPage.tsx's
+   comment on why that was removed in favor of always showing this one,
+   under the image, matching the requested info → image → thumbnails
+   order at every breakpoint). Lives inside .imagePane, below
+   .imageFrame, not in a gutter beside it or inline in the form. */
+.imageThumbRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  flex: 0 0 auto;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.imageThumbRow::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---- Short-viewport compaction ---- */
+
+/* Deliberately placed at the very END of the file, after every base
+   rule it overrides — NOT next to the sections it touches (.formPane,
+   .heading, .subtext, .form, etc. are scattered throughout the file
+   above). Confirmed by direct measurement that an earlier version of
+   this block sitting further up silently lost the cascade: CSS gives
+   equal-specificity rules to the LAST one in source order regardless of
+   which is inside a media query, so a compact override declared above
+   an unconditional base rule for the same selector never actually
+   takes effect — every property below except .formPane's (whose base
+   rule happens to sit right at the top of the file) was being
+   overridden by its own later, unconditional base rule and doing
+   nothing, for as long as this block existed. Putting the whole thing
+   last guarantees every declaration here wins, regardless of what gets
+   added above it later.
+
+   Targets short viewports specifically (max-height, not max-width) —
+   the actual constraint being solved is vertical room, which a phone in
+   the stacked (narrow) layout runs short on but a short *desktop*
+   window could too; tying this to width alone would either miss that
+   case or needlessly compact a merely-narrow-but-tall phone. Measured
+   against common phone heights (375x667, 320x568) and short desktop
+   windows (1280x600) where even the already-trimmed base spacing above
+   still pushed content past the fold — Create Account specifically,
+   with its extra "Full name" field, needing the most. This part is
+   deliberately width-independent — tighter form spacing is harmless on
+   a short desktop window too, unlike .imagePane's height rule further
+   below, which is NOT safe to apply there (see its own comment). */
+@media (max-height: 700px) {
+  .formPane {
+    padding-block: var(--space-2);
+  }
+
+  .heading {
+    font-size: 1.3rem;
+  }
+
+  .subtext {
+    margin-bottom: var(--space-2);
+  }
+
+  .field {
+    gap: 2px;
+  }
+
+  .form {
+    gap: var(--space-1);
+  }
+
+  .submitBtn {
+    margin-top: 0;
+  }
+
+  .switchLink {
+    margin: var(--space-2) 0 0;
+  }
+
+  .note {
+    margin: var(--space-2) 0 0;
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.72rem;
+  }
+}
+
+/* .imageFrame's height compaction (targets .imageFrame now, not
+   .imagePane — the pane itself is content-sized, see its own comment;
+   this is the element that actually carries a fixed height to shrink).
+   Still requires the narrow/stacked layout too (max-width here matches
+   the min-width: 64rem desktop breakpoint exactly) — without that width
+   condition this also fired on a short-but-wide desktop window (e.g.
+   1100x650, a perfectly ordinary laptop viewport once browser chrome
+   is subtracted), overriding the side-by-side layout's own flex:1 1
+   auto sizing. A shorter (not tiny) image here — the submit button's
+   own visibility no longer actually depends on this value (.formPane
+   sizes to its own content regardless of .imagePane's height once
+   total page content exceeds .page's min-height, which it reliably
+   does), so this is now purely about not making an already-short
+   viewport scroll further than it has to, not a hard safety net. Same
+   end-of-file placement reasoning as the block above: .imageFrame's
+   own base rule sits near the top of the file, so this has to come
+   after it to actually win. */
+@media (max-height: 700px) and (max-width: 63.9375rem) {
+  .imageFrame {
+    height: 200px;
+  }
+}

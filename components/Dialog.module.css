@@ -1,0 +1,119 @@
+/* components/Dialog.module.css — generic modal shell shared by every
+   product-detail dialog (Request a Quote, Request Customization,
+   Warranty, Protection). Built the same way MobileFilterDrawer's sheet
+   already is: native <dialog> + showModal(), which gives a real focus
+   trap, Escape-to-close, and an inert background page for free — this
+   file only supplies the visual shell and entrance/exit motion. */
+
+.dialog {
+  margin: auto; /* native <dialog> already centers itself in the top
+                    layer in evergreen browsers; explicit as a fallback. */
+  width: min(92vw, 30rem);
+  max-height: 85vh;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: 0 12px 40px rgba(28, 28, 28, 0.2);
+  /* Fast, transform/opacity only, per the project's motion rules.
+     prefers-reduced-motion is handled globally (globals.css forces
+     every transition/animation duration to ~0 for that preference). */
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms;
+}
+
+/* display MUST be scoped to [open]: the browser's own
+   dialog:not([open]) { display: none } is a user-agent style, and
+   author styles always win over UA defaults regardless of specificity —
+   an unconditional `display` here would keep the dialog visible (and
+   blocking clicks to the page under it) even while "closed". */
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog::backdrop {
+  background: rgba(28, 28, 28, 0.45);
+  transition: opacity 180ms;
+}
+
+@starting-style {
+  .dialog[open] {
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+  }
+
+  .dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--color-ink);
+}
+
+/* Opt-in modifier (Dialog's `align="center"` prop) — used by AuthModal
+   for a branded, centered heading. A 3-column grid, not text-align
+   alone: the first and third columns both match .closeBtn's own 44px
+   min-width, so the title's center column is genuinely centered on the
+   header regardless of the button's rendered size — asymmetric padding
+   (button-width on the right only) would visually off-center the text
+   instead. */
+.headerCenter {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+}
+
+.headerCenter .title {
+  grid-column: 2;
+  text-align: center;
+}
+
+.headerCenter .closeBtn {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-muted-dark);
+  border-radius: var(--radius-sm);
+}
+
+.closeBtn:hover {
+  color: var(--color-primary);
+  background: var(--color-surface-tint);
+}
+
+/* flex:1 + min-height:0 is what lets this scroll independently of the
+   header when content is tall — a flex child's default min-height is
+   auto ("as tall as my content"), which would defeat overflow:auto by
+   growing the dialog instead of scrolling inside it. */
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-4);
+}

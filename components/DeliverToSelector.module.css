@@ -1,0 +1,86 @@
+.wrap {
+  position: relative;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: none;
+  background: transparent;
+  color: var(--color-muted-dark);
+  font-size: 0.8rem;
+  min-height: 44px;
+  padding: 0 var(--space-2);
+}
+
+.trigger:hover {
+  color: var(--color-primary);
+}
+
+.label {
+  color: var(--color-muted);
+}
+
+.value {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  min-width: 12rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(28, 28, 28, 0.12);
+  padding: var(--space-2);
+  z-index: 40;
+  /* Short reveal — a state change, not a high-frequency action. */
+  animation: dropdownReveal 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes dropdownReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  padding: var(--space-2);
+  min-height: 40px;
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  border-radius: var(--radius-sm);
+}
+
+.option:hover {
+  background: var(--color-surface-tint);
+}
+
+.optionActive {
+  font-weight: 700;
+  color: var(--color-primary);
+}

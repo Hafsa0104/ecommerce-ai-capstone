@@ -1,0 +1,83 @@
+/* components/WishlistButton.module.css */
+
+/* Product-detail usage: icon + visible "Save"/"Saved" label, matching
+   the look of the other secondary actions next to it (Request a Quote). */
+.defaultBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.defaultBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Product title row (next to the WhatsApp share button): a plain
+   icon button, no resting border — the boxed/bordered look read as
+   heavy sitting next to a page heading. Not .compactBtn: that one is
+   position: absolute for overlaying a card image, which would break
+   sitting inline in a row like this.
+   min-width is narrower than the usual 44px floor used everywhere
+   else in this app — WCAG 2.5.8 allows a target below 44px on one
+   axis specifically when adjacent targets are still spaced so a 24px
+   circle centered on each one doesn't overlap the next, which a
+   flush-but-not-overlapping pair like this satisfies; full height
+   stays at 44px. Two buttons sitting this close together is what
+   makes that trade-off worth making here, unlike this app's other
+   (isolated) icon buttons, which stay at the full 44×44 floor. */
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 44px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-muted-dark);
+  flex-shrink: 0;
+}
+
+.iconBtn:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-danger-text);
+}
+
+/* ProductCard usage: a small icon-only circle overlaid on the card's
+   image, the common "heart in the corner" pattern — kept to a fixed
+   44px touch target despite the compact visual size. */
+.compactBtn {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-muted-dark);
+  box-shadow: 0 1px 3px rgba(28, 28, 28, 0.15);
+}
+
+.compactBtn:hover {
+  color: var(--color-danger-text);
+}
+
+/* Saved state — filled heart in the brand's danger/accent red (the
+   near-universal color for a "loved/saved" heart), same "real state,
+   not just a hover tint" treatment other toggles in this project use. */
+.saved {
+  color: var(--color-danger-text);
+}

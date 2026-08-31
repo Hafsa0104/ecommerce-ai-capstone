@@ -1,0 +1,146 @@
+/* components/QuantityStepper.module.css — moved from
+   ProductPurchasePanel.module.css so the exact same [-] qty [+] control
+   can be reused by the Quote/Customization request dialogs instead of
+   duplicating this markup and CSS three times. Behavior/styling
+   unchanged from the original. */
+
+/* Wraps .qtyControl + the one-time hint below it — sized to its own
+   content (not stretched to fill whatever flex row it sits in): a
+   plain block child of a flex row still auto-sizes to content the way
+   an inline-block would, this is just documenting that intent, not
+   fighting the browser for it. */
+.qtyWrap {
+  display: inline-block;
+}
+
+/* inline-flex, not flex — .qtyControl is now a plain block child of
+   .qtyWrap (not itself a flex item of .qtyRow anymore, now that
+   .qtyWrap sits between them), and a block-level flex container
+   defaults to filling its containing block's full width the same way
+   any other block element would. inline-flex keeps the shrink-to-fit
+   sizing this pill always had before .qtyWrap existed (back when
+   .qtyControl WAS the direct flex item of .qtyRow, which sizes its own
+   children by content, not by filling available space) — without this,
+   .qtyControl stretches to match .qtyWrap's width whenever the hint
+   below it is wider, leaving a visibly empty gap after the [+] button. */
+.qtyControl {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.qtyBtn {
+  border: none;
+  background: var(--color-surface-alt);
+  color: var(--color-ink);
+  width: 36px;
+  min-height: 44px;
+  font-size: 1.1rem;
+}
+
+.qtyBtn:hover:not(:disabled) {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}
+
+/* Native `disabled` at the floor (see QuantityStepper.tsx) means the
+   browser already blocks click/keyboard activation on its own — this is
+   purely the visual side of that. */
+.qtyBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Deliberately `outline`, not the project's usual box-shadow focus
+   ring: .qtyControl (the shared parent) has overflow:hidden so its
+   square-cornered children read as one rounded pill — and a CHILD's
+   box-shadow *does* get clipped at a parent's overflow boundary (unlike
+   an element clipping its own shadow, this case is unambiguous). A
+   negative offset keeps the ring inside each segment's own box, so it
+   can never be clipped and doesn't bleed into the adjacent segment,
+   which sits flush against it with no gap. */
+.qtyBtn:focus-visible,
+.qtyInput:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+.qtyInput {
+  width: 3.5rem;
+  border: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  text-align: center;
+  font-size: 1rem; /* 16px min — avoids iOS zoom-on-focus */
+  -moz-appearance: textfield;
+}
+
+/* The one-time "type a quantity directly" tip — styled as a chat-style
+   message bubble (solid blue, white text, an asymmetric radius with a
+   small "tail" corner pointing up toward the field above it) rather
+   than the flatter tinted-box treatment this page's other secondary
+   callouts use elsewhere: this one's meant to read as a brief,
+   friendly nudge in passing, not a persistent piece of page content.
+   Sits in normal flow below .qtyControl (not absolutely positioned) —
+   it's rare (shows at most once ever per product) and brief, so the
+   small layout shift while it's visible is an acceptable trade for it
+   never overlapping/hiding the Request a Quote / Add to Cart buttons
+   that happen to render right below this row (an absolutely-positioned
+   version floated over them instead, which is worse). A wide "strip",
+   not a squarish box — max-width raised so the two-sentence tip mostly
+   reads across one or two long lines instead of wrapping narrow. */
+.qtyHint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding: var(--space-3) var(--space-4);
+  max-width: 26rem;
+  width: max-content;
+  background: var(--color-primary);
+  border-radius: 4px 1.1rem 1.1rem 1.1rem;
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+  color: #fff;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* 44px minimum touch target — the same accessible-minimum rule this
+   project applies to every other button, not relaxed just because this
+   one's glyph is small; the hit area is the full 44x44 square even
+   though the "×" drawn inside it isn't. */
+.qtyHintDismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-top: -8px;
+  margin-right: -10px;
+  margin-bottom: -8px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.qtyHintDismiss:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* White, not the project's usual --color-focus — that ring is a
+   similar blue to this bubble's own solid background and would barely
+   register against it. */
+.qtyHintDismiss:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}

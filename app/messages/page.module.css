@@ -1,0 +1,359 @@
+/* app/messages/page.module.css */
+
+.pageContainer {
+  padding-block: var(--space-4) var(--space-8);
+}
+
+/* Fills whatever room is actually left below the sticky header
+   instead of a flat rem cap — a message center reads as an app
+   surface (conversation list + thread each scroll WITHIN it), not
+   another content block the whole page scrolls past to reach, the
+   way a real marketplace's inbox behaves. var(--header-height) + the
+   2.75rem category row below it is the same precise offset
+   app/product/[id]/page.module.css already uses for its own sticky
+   positioning; the two padding-block values above are this page's
+   own top/bottom breathing room around .layout. min-height is the
+   floor for a very short viewport (a phone in landscape, say) where
+   filling "everything below the header" would otherwise get
+   uncomfortably cramped. */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  height: calc(100vh - var(--header-height) - 2.75rem - var(--space-4) - var(--space-8));
+  /* dvh accounts for a mobile browser's own address-bar chrome
+     (100vh alone can run taller than what's actually visible there,
+     cutting off the composer) — plain vh above is the fallback for
+     browsers that don't support dvh; unsupported browsers ignore this
+     whole re-declaration and silently keep that one. */
+  height: calc(100dvh - var(--header-height) - 2.75rem - var(--space-4) - var(--space-8));
+  min-height: 28rem;
+}
+
+@media (min-width: 56rem) {
+  .layout {
+    grid-template-columns: 20rem 1fr;
+  }
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  overflow: hidden;
+}
+
+.sidebarTitle {
+  font-size: 1.15rem;
+  color: var(--color-ink);
+  padding: 0 var(--space-1);
+}
+
+.searchWrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-2);
+  color: var(--color-muted);
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  padding: var(--space-2) 0;
+  font-size: 0.875rem;
+  min-height: 40px;
+  flex: 1;
+  background: transparent;
+}
+
+.convList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.convBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: none;
+  background: none;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  text-align: left;
+  min-height: 56px;
+}
+
+.convBtn:hover {
+  background: var(--color-surface-tint);
+}
+
+.convBtnActive {
+  background: var(--color-surface-tint);
+}
+
+.convAvatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.convInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.convName {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.convPreview {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.noResults {
+  padding: var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ── Main panel ──────────────────────────────────────────────── */
+
+.mainPanel {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  min-height: 0;
+}
+
+.emptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  text-align: center;
+  color: var(--color-muted-dark);
+  padding: var(--space-6);
+}
+
+.threadHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.threadName {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.threadCountry {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.thread {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.bubble {
+  max-width: 75%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.bubbleThem {
+  align-self: flex-start;
+  background: var(--color-surface-alt);
+  color: var(--color-ink);
+}
+
+.bubbleMe {
+  align-self: flex-end;
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* The "regarding this product" card a Send-inquiry message carries
+   (see handleSend/pendingProduct) — a light card regardless of which
+   bubble color it sits in (only ever .bubbleMe today, but not
+   hardcoded to that background specifically), clickable straight back
+   to the product. */
+.bubbleProductRef {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.14);
+  /* Overrides the global `a { color: var(--color-primary) }` reset —
+     this needs to read in whatever color the bubble it's sitting in
+     already uses (white on .bubbleMe's blue), not a mismatched link
+     blue with poor contrast against that same blue background. */
+  color: inherit;
+}
+
+.bubbleProductRef:hover {
+  color: inherit;
+}
+
+.bubbleProductImg {
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.bubbleProductInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.bubbleProductName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bubbleProductPrice {
+  font-size: 0.78rem;
+  opacity: 0.85;
+}
+
+/* Sits between the thread and the composer while a Send-inquiry
+   message is still being written — removable on its own (the X)
+   without discarding whatever the shopper has already typed. */
+.pendingProductChip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 var(--space-3) var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-tint);
+  color: var(--color-muted-dark);
+}
+
+.pendingProductChipText {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pendingProductChipText strong {
+  color: var(--color-ink);
+}
+
+.pendingProductChipClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-muted-dark);
+  border-radius: var(--radius-sm);
+}
+
+.pendingProductChipClose:hover {
+  color: var(--color-danger-text);
+  background: var(--color-surface);
+}
+
+.composer {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.composerInput {
+  flex: 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.9rem;
+  min-height: 44px;
+}
+
+.sendBtn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sendBtn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.sendBtn:disabled {
+  background: var(--color-muted);
+  cursor: not-allowed;
+}

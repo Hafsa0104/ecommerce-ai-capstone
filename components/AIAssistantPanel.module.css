@@ -1,0 +1,433 @@
+/* components/AIAssistantPanel.module.css */
+
+/* Transparent click-to-close layer — NOT a real modal backdrop (no
+   dimming, no `inert` on the page behind it): the whole point of this
+   panel is that browsing stays possible while it's open. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 149;
+}
+
+.panel {
+  position: fixed;
+  top: calc(var(--header-height) + 2.75rem);
+  right: 0;
+  bottom: 0;
+  z-index: 150;
+  width: min(100vw, 24rem);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  box-shadow: -12px 0 32px rgba(28, 28, 28, 0.12);
+  transform: translateX(100%);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.panelOpen {
+  transform: translateX(0);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.headerTitle svg {
+  color: var(--color-primary);
+}
+
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--color-muted-dark);
+  border-radius: var(--radius-sm);
+}
+
+.closeBtn:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}
+
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-4);
+  position: relative;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-2);
+  color: var(--color-muted-dark);
+}
+
+.emptyIcon {
+  color: var(--color-primary);
+  margin-bottom: var(--space-1);
+}
+
+.emptyTitle {
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.emptyBody {
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-3);
+}
+
+.suggestionBtn {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+  color: var(--color-ink);
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.suggestionBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.messageList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bubble {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+.bubbleUser {
+  flex-direction: row-reverse;
+}
+
+/* No extra layout rules needed today (the visual distinction comes
+   from .userText vs .markdown below) — kept as a real, defined class
+   rather than leaving the assistant branch's className resolve to
+   `undefined` (which rendered as the literal string "undefined" in
+   the DOM), and as a hook for any future assistant-only bubble
+   styling. A real declaration (matching .bubble's own default) is
+   required here, not an empty ruleset — Turbopack's CSS pipeline
+   strips empty rules, which would silently drop this class from the
+   compiled module's exports and reintroduce the same bug. */
+.bubbleAssistant {
+  flex-direction: row;
+}
+
+.bubbleAvatar {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+  margin-top: 2px;
+}
+
+.bubbleContent {
+  min-width: 0;
+  max-width: 85%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.bubbleUser .bubbleContent {
+  align-items: flex-end;
+}
+
+.userText {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.markdown {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+  color: var(--color-ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
+.mdP {
+  margin: 0 0 var(--space-2);
+}
+
+.mdP:last-child {
+  margin-bottom: 0;
+}
+
+.mdList {
+  margin: 0 0 var(--space-2);
+  padding-left: 1.1rem;
+}
+
+.mdList:last-child {
+  margin-bottom: 0;
+}
+
+.mdCode {
+  background: var(--color-surface-tint);
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-size: 0.85em;
+}
+
+/* Same three-dot "thinking" indicator shape as the rest of the site's
+   loading conventions — transform/opacity only, staggered per dot,
+   respects prefers-reduced-motion via the global override already in
+   globals.css. */
+.thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+}
+
+.thinkingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-muted);
+  animation: thinkingBounce 1000ms ease-in-out infinite;
+}
+
+.thinkingDot:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.thinkingDot:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes thinkingBounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.productRow {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+  max-width: 100%;
+}
+
+.productCard {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 9rem;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.productCard:hover {
+  border-color: var(--color-primary);
+}
+
+.productName {
+  font-size: 0.78rem;
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.productPrice {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.errorText {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: rgba(211, 47, 47, 0.08);
+  color: var(--color-danger-text);
+  font-size: 0.8rem;
+}
+
+.jumpBtn {
+  position: absolute;
+  align-self: center;
+  margin: 0 auto var(--space-2);
+  bottom: 5.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 36px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(28, 28, 28, 0.12);
+}
+
+.jumpBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.composerInput {
+  flex: 1;
+  min-width: 0;
+  resize: none;
+  max-height: 160px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  /* 16px minimum — smaller sizes trigger unwanted zoom on iOS focus,
+     same rule the header search field already follows. */
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--color-ink);
+  background: var(--color-surface);
+}
+
+.composerInput:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+.sendBtn,
+.stopBtn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.sendBtn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.sendBtn:disabled {
+  background: var(--color-muted);
+  cursor: not-allowed;
+}
+
+.stopBtn {
+  background: var(--color-danger);
+}
+
+.stopBtn:hover {
+  background: var(--color-danger-text);
+}
+
+.composerHint {
+  margin: 0;
+  padding: 0 var(--space-3) var(--space-2);
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+@media (max-width: 30rem) {
+  .panel {
+    width: 100vw;
+  }
+
+  .composerHint {
+    display: none;
+  }
+}

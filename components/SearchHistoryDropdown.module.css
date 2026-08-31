@@ -1,0 +1,186 @@
+/* components/SearchHistoryDropdown.module.css */
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(28, 28, 28, 0.16);
+  z-index: 45;
+  overflow: hidden;
+  /* Short reveal — a state change, not a high-frequency action; same
+     timing/easing DeliverToSelector's own dropdown uses. */
+  animation: dropdownReveal 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes dropdownReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section + .section {
+  border-top: 1px solid var(--color-border);
+}
+
+/* Same red/danger convention app/listing/page.module.css's own
+   .searchFallbackNotice uses for "this search didn't match anything"
+   — kept visually consistent between the two places that say it. */
+.noMatchNotice {
+  margin: 0;
+  padding: var(--space-3);
+  color: var(--color-danger-text);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* A freshly-focused search box with no history yet — informational,
+   not an error, so this stays in the same quiet, muted tone the rest
+   of the app uses for "nothing here yet" states (e.g. Profile's own
+   empty-orders/empty-addresses text), not .noMatchNotice's red. */
+.emptyState {
+  margin: 0;
+  padding: var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.headerLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.clearAllBtn {
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.clearAllBtn:hover {
+  background: var(--color-surface-tint);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1);
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.itemBtn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  border: none;
+  background: none;
+  text-align: left;
+  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  font-size: 0.875rem;
+}
+
+.itemBtn:hover,
+.itemBtn:focus-visible {
+  background: var(--color-surface-tint);
+}
+
+.itemIcon {
+  flex-shrink: 0;
+  color: var(--color-muted);
+}
+
+.itemText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.productItemBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.productItemBtn:hover,
+.productItemBtn:focus-visible {
+  background: var(--color-surface-tint);
+}
+
+.productThumb {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.productPrice {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+}
+
+.removeBtn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: none;
+  color: var(--color-muted-dark);
+  border-radius: var(--radius-sm);
+}
+
+.removeBtn:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-danger-text);
+}

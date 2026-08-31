@@ -1,0 +1,304 @@
+/* app/checkout/page.module.css */
+
+.pageContainer {
+  padding-block: var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.title {
+  font-size: 1.5rem;
+  color: var(--color-ink);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--color-muted-dark);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.primaryLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.primaryLink:hover {
+  background: var(--color-primary-hover);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ── Layout ──────────────────────────────────────────────────── */
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+
+.mainCol {
+  min-width: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.sectionSub {
+  margin: var(--space-1) 0 var(--space-4);
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+/* ── Step 1: guest / sign in choice ─────────────────────────────── */
+
+.choiceRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@media (min-width: 32rem) {
+  .choiceRow {
+    flex-direction: row;
+  }
+}
+
+.choiceBtn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+  min-height: 44px;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  text-align: left;
+}
+
+.choiceBtn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-tint);
+}
+
+.choiceBtn strong {
+  color: var(--color-ink);
+  font-size: 1rem;
+}
+
+.choiceBtn span {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+/* ── Step 2: shipping/contact form ──────────────────────────────── */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+@media (min-width: 30rem) {
+  .formRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.formInput {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--color-surface);
+}
+
+.note {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  color: var(--color-muted-dark);
+  font-size: 0.8rem;
+}
+
+.placeOrderBtn {
+  min-height: 48px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.placeOrderBtn:hover {
+  background: var(--color-primary-hover);
+}
+
+/* ── Summary ─────────────────────────────────────────────────── */
+
+.summaryCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  align-self: start;
+}
+
+.summaryTitle {
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.summaryList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: 0.85rem;
+  color: var(--color-muted-dark);
+}
+
+.summaryQty {
+  color: var(--color-muted);
+}
+
+.summaryDivider {
+  height: 1px;
+  background: var(--color-border);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.9rem;
+  color: var(--color-muted-dark);
+}
+
+.summaryTotal {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* ── Confirmation ────────────────────────────────────────────── */
+
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.confirmIcon {
+  color: var(--color-success);
+}
+
+.confirmTitle {
+  font-size: 1.5rem;
+  color: var(--color-ink);
+}
+
+.confirmOrderId {
+  margin: 0;
+  color: var(--color-muted-dark);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+.confirmTotal {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.confirmActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}
+
+/* Same shape/size as .primaryLink (44px min target) but outlined
+   instead of filled — a real second choice next to "Continue
+   shopping" ("View my orders"), not the page's main call to action. */
+.secondaryLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.secondaryLink:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+  text-decoration: none;
+}

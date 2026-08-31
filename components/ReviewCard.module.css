@@ -1,0 +1,65 @@
+/* components/ReviewCard.module.css — moved from
+   app/product/[id]/page.module.css's old .reviewItem/.reviewStars now
+   that this markup lives in its own component. Visual baseline is
+   unchanged (same card look); new here is the star-icon row (replacing
+   plain-text ★/☆ characters) and the Helpful vote button. */
+
+.reviewItem {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.starRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.starFilled {
+  color: var(--color-warning);
+}
+
+.starEmpty {
+  color: var(--color-border-strong);
+}
+
+.reviewText {
+  margin: 0;
+  color: var(--color-muted-dark);
+  font-size: 0.9rem;
+}
+
+.helpfulBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  min-height: 36px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-muted-dark);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: var(--space-1);
+}
+
+.helpfulBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Voted state — a filled thumb + tinted background/border, the same
+   "selected" visual language priceItemActive/thumbBtnActive already use
+   elsewhere in this project (border + tint, not color alone). */
+.helpfulBtnActive {
+  border-color: var(--color-primary);
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}

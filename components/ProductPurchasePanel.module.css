@@ -1,0 +1,215 @@
+/* components/ProductPurchasePanel.module.css */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.priceBox {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.priceItem {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  text-align: center;
+  min-width: 6rem;
+}
+
+.priceItem small {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+.priceItemActive {
+  border-color: var(--color-primary);
+  background: var(--color-surface-tint);
+}
+
+.priceValue {
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  margin-bottom: 2px;
+}
+
+/* align-items: flex-start, not center — QuantityStepper's own one-time
+   hint (see its own comment) can make .qtyWrap taller than its
+   siblings here while it's showing; center would then pull the
+   shorter label/Subtotal down to stay centered against that taller
+   height, visibly detaching them from the [-] qty [+] control they sit
+   next to. flex-start keeps all three anchored to the row's top
+   regardless — .qtyLabel's own margin-top below compensates so it
+   still reads as vertically centered against the 46px-tall control in
+   the normal (no hint showing) case. */
+.qtyRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.qtyLabel {
+  /* (46px control height − one line of this text) ÷ 2, so flex-start
+     alignment still lands this at the same visual center-of-control
+     position the old align-items: center gave it for free. */
+  margin-top: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* The [-] qty [+] control itself moved to QuantityStepper.module.css —
+   it's now shared with the Quote/Customization request dialogs instead
+   of being duplicated per use. */
+
+.subtotal {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.subtotalValue {
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.subtotalUnit {
+  font-size: 0.78rem;
+  color: var(--color-muted-dark);
+}
+
+/* Houses Request a Quote (secondary) next to Add to Cart (primary) —
+   wraps on narrow screens rather than the two competing for width in one
+   forced row, same flex-wrap pattern already used by .qtyRow above.
+   position: relative anchors .addedPopup below to THIS row specifically
+   (not the whole panel), so it appears right under these buttons. */
+.actionsRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Reserve consistent width so the label swap on click doesn't shift layout (CLS) */
+.addCartBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  min-height: 44px;
+  min-width: 12rem;
+  transition: transform 120ms ease-out;
+}
+
+/* Only ever true for the brief moment the quantity field shows a typed
+   "0" and hasn't blurred yet — see ProductPurchasePanel.tsx's
+   canAddToCart. */
+.addCartBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.addCartBtn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.addCartBtn:active {
+  transform: scale(0.96);
+}
+
+/* Plays once when the button switches to its "Added" state —
+   confirms the click registered. transform-only, no layout work.
+   prefers-reduced-motion is handled globally in globals.css. */
+.addCartBtnConfirmed {
+  animation: addToCartPulse 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes addToCartPulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* A real floating popup, not an inline message — absolutely positioned
+   against .actionsRow (position: relative there) so it sits right
+   under the buttons and OVER whatever content follows (Specification),
+   instead of pushing that content down. Same elevated-card language as
+   Dialog.module.css's own .dialog (border + radius-md + this exact
+   box-shadow), just anchored here instead of centered in the viewport. */
+.addedPopup {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: 0 12px 40px rgba(28, 28, 28, 0.2);
+  animation: addedPopupIn 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes addedPopupIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.addedPopupIcon {
+  flex-shrink: 0;
+  color: var(--color-success);
+}
+
+.addedPopupText {
+  flex: 1;
+  margin: 0;
+  color: var(--color-success);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.addedPopupClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-muted-dark);
+  border-radius: var(--radius-sm);
+}
+
+.addedPopupClose:hover {
+  color: var(--color-primary);
+  background: var(--color-surface-tint);
+}

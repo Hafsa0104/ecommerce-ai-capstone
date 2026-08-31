@@ -1,0 +1,142 @@
+/* components/FilterSidebar.module.css */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  align-self: start;
+}
+
+/* Mobile drawer variant — the sheet (MobileFilterDrawer) already
+   supplies the surrounding frame, so this drops its own border/
+   background/padding rather than nesting a card inside a card. */
+.sidebarPlain {
+  border: none;
+  border-radius: 0;
+  padding: var(--space-4);
+}
+
+.clearAll {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-danger);
+  margin-bottom: var(--space-2);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sectionTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-1) 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.list a {
+  display: block;
+  padding: var(--space-1) var(--space-1);
+  color: var(--color-muted-dark);
+  text-decoration: none;
+  font-size: 0.875rem;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+}
+
+.list a:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* A brand with zero products in the currently-selected category —
+   shown, not hidden (so the shopper can still see it exists site-wide),
+   but not a link: clicking it would only ever land on a guaranteed
+   empty result. Matches .list a's own layout/sizing so the list
+   doesn't visually jump between enabled and disabled rows. */
+.disabledOption {
+  display: flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-1);
+  min-height: 36px;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+/* The catalog carries ~40 brands — capped and scrollable so the Brand
+   section doesn't push every filter section below it far down the
+   page, same idea SearchHistoryDropdown's own list already uses. */
+.brandList {
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.activeLink {
+  color: var(--color-primary) !important;
+  font-weight: 700;
+  background: var(--color-surface-tint);
+}
+
+.stars {
+  color: var(--color-warning);
+  margin-right: var(--space-1);
+  letter-spacing: 1px;
+}
+
+.priceForm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.priceInput {
+  width: 4.5rem;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 1rem; /* 16px min — avoids iOS zoom-on-focus */
+  min-height: 36px;
+}
+
+.priceApply {
+  border: 1px solid var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-height: 36px;
+}
+
+.priceApply:hover {
+  background: var(--color-primary);
+  color: #fff;
+}

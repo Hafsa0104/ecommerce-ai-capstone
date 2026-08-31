@@ -1,0 +1,93 @@
+/* components/Footer.module.css */
+
+.footer {
+  margin-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding-block: var(--space-8) var(--space-6);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: 1fr;
+  padding-bottom: var(--space-6);
+}
+
+/* Brand + 3 nav columns now (was brand + 2) — all four across at once
+   above the mobile breakpoint; going 1 → 3 or 1 → 2 → 4 left a
+   mismatched number of items for an intermediate column count, wrapping
+   the last nav column under the brand column instead of lining up with
+   its siblings. Labels here are short enough (one or two words) that
+   four columns still reads fine at 40rem. */
+@media (min-width: 40rem) {
+  .grid {
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  }
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0 0 var(--space-2);
+  color: var(--color-ink);
+}
+
+.tagline {
+  color: var(--color-muted);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.heading {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted-2);
+  margin: 0 0 var(--space-3);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.list a {
+  color: var(--color-ink);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.list a:hover {
+  color: var(--color-primary);
+}
+
+.bottomBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-top: 1px solid var(--color-border-strong);
+  padding-top: var(--space-4);
+}
+
+.copyright {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.sitemapLink {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted-dark);
+}
+
+.sitemapLink:hover {
+  color: var(--color-primary);
+}

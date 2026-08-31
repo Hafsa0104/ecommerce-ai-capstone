@@ -1,0 +1,192 @@
+/* app/listing/page.module.css */
+
+.pageContainer {
+  padding-block: var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.pageHeading {
+  font-size: 1.5rem;
+  color: var(--color-ink);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .layout {
+    grid-template-columns: 16rem 1fr;
+  }
+}
+
+/* Below 56rem, filtering moves into MobileFilterDrawer's sheet (the
+   drawer renders its own copy of FilterSidebar) — this desktop copy
+   would otherwise duplicate every filter control on the page. */
+.desktopSidebar {
+  display: none;
+}
+
+@media (min-width: 56rem) {
+  .desktopSidebar {
+    display: block;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+
+.resultsCount {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted-dark);
+}
+
+.topbarRight {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.verifiedToggle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-muted-dark);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: var(--space-1) var(--space-3);
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.verifiedToggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.verifiedToggleOn {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.verifiedToggleOn:hover {
+  color: #fff;
+}
+
+.sortForm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sortLabel {
+  font-size: 0.85rem;
+  color: var(--color-muted-dark);
+}
+
+.sortSelect {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: 1rem; /* 16px min — avoids iOS zoom-on-focus */
+  min-height: 36px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.sortApply {
+  border: 1px solid var(--color-primary);
+  background: transparent;
+  color: var(--color-primary);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-height: 36px;
+}
+
+.sortApply:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* Verified/Deals no longer have a sidebar/drawer copy to fall back on
+   (see FilterSidebar.tsx — its "Show only" section was removed), so
+   these top controls stay visible at every width; this is their only
+   path now. Sort still gets its own full-width line below the sidebar/
+   drawer breakpoint, so the select has room to be a real tap target. */
+@media (max-width: 55.99rem) {
+  .sortForm {
+    width: 100%;
+  }
+
+  .sortSelect {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: var(--space-4);
+}
+
+.searchFallbackNotice {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  /* Same danger-tint convention the AI assistant panel's inline error
+     text uses (see AIAssistantPanel.module.css's .errorText) — red
+     enough to read as "this didn't match" at a glance, not a generic
+     info banner. */
+  background: rgba(211, 47, 47, 0.08);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  color: var(--color-danger-text);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-8);
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-muted-dark);
+}
+
+/* Pagination's own styles live in components/Pagination.module.css now —
+   moved there alongside the keyboard-nav behavior that needed a small
+   client component, rather than duplicated in both places. */

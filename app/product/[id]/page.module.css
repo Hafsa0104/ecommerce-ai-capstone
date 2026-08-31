@@ -1,0 +1,378 @@
+/* app/product/[id]/page.module.css */
+
+.pageContainer {
+  padding-block: var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.breadcrumb ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.breadcrumb li:not(:last-child)::after {
+  content: "/";
+  margin-left: var(--space-1);
+  color: var(--color-border-strong);
+}
+
+.breadcrumb li[aria-current="page"] {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* ── Top: gallery + info + supplier ─────────────────────────── */
+
+.topGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+/* Tablet range only — .topGrid is still a single column here (the
+   3-column layout below doesn't start until 64rem), so the gallery's
+   square (aspect-ratio: 1/1) main image was stretching to that entire
+   column's width: fine on a phone (a full-width square image at ~390px
+   reads as normal), but at 768–1023px that's a ~700–950px image
+   dominating the whole screen before any product info is visible. This
+   caps the gallery back down to roughly its eventual desktop column
+   width (~26rem) and centers it — .info/.supplierCard are left alone,
+   they read fine at full single-column width; it was only the
+   aspect-ratio-driven image that ballooned. Bounded above at just under
+   64rem so this can never overlap the desktop 3-column rule, which
+   already constrains the gallery to its own (narrower) column and needs
+   no cap of its own. */
+@media (min-width: 48rem) and (max-width: 63.9375rem) {
+  .gallerySticky {
+    max-width: 26rem;
+    justify-self: center;
+  }
+}
+
+@media (min-width: 64rem) {
+  /* Three columns — gallery, product information, supplier/order — kept
+     side by side. align-items: start keeps the shorter gallery/supplier
+     columns from stretching to match .info's height (the tallest:
+     title, rating, purchase panel, full spec table) — but that same
+     rule is also what leaves real vertical room *inside* their own grid
+     cells: a grid row sizes to its tallest participant regardless of
+     each item's own align-self, so the gallery/supplier cells are
+     exactly as tall as .info's content even though the gallery/supplier
+     boxes themselves aren't stretched to fill them. position: sticky
+     below uses exactly that room. */
+  .topGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) 18rem;
+    align-items: start;
+  }
+
+  /* Alibaba-style behavior: the gallery and supplier card stay in view
+     while .info's longer content scrolls past beside them, then resume
+     scrolling normally once the row (i.e. .info's own content) has
+     fully passed — because, per the comment above, there's genuine
+     space inside their grid cells for a sticky element to travel
+     through before running out of room. No JS, no height
+     synchronization, and the image itself is never resized — this is
+     pure positioning, layered on top of the gallery's/supplier card's
+     existing natural, content-driven height. Desktop-only: below this
+     breakpoint the columns stack in normal document flow, where
+     "stick while a taller sibling scrolls past" doesn't apply and would
+     just be a confusing stuck-in-place gallery while the whole page
+     scrolls in one column. */
+  .gallerySticky,
+  .supplierCard {
+    position: sticky;
+    /* Explicit, not left to inherit from .topGrid's align-items: start —
+       confirmed by testing that position: sticky on a grid item behaves
+       inconsistently with align-self: auto even when it renders at the
+       same (non-stretched) height either way; an explicit align-self is
+       what makes sticky actually track correctly here. .supplierCard
+       already had this from before; .gallerySticky needs it too. */
+    align-self: start;
+    /* Clears the site's own sticky header: --header-height (4rem) plus
+       its category row (2.75rem — mirrors Navbar.module.css's
+       --nav-category-h; re-stated here because that custom property is
+       scoped to .siteHeader's own subtree, not visible in this file),
+       plus a little breathing room. */
+    top: calc(var(--header-height) + 2.75rem + var(--space-3));
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.stock {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-success);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Title + the same Save/Share icon buttons ProductPurchasePanel's own
+   actions row already has, added here too (not moved) to match the
+   reference layout: title top-left, icons pinned top-right at the
+   same level. */
+.titleRow {
+  display: flex;
+  /* center, not flex-start — with a long title wrapping to two lines
+     (this row's own height), the icons now sit against the middle of
+     that whole block instead of pinned to just its first line. */
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+
+.titleActions {
+  display: flex;
+  align-items: center;
+  /* No gap — each button already carries its own 44px touch-target
+     padding around its (much smaller) icon, so the two sat far apart
+     even at a small gap value; removing it entirely still leaves them
+     visually distinct without shrinking either button below 44px. */
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.brandLine {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-muted-dark);
+}
+
+.brandLink {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  color: var(--color-muted-dark);
+}
+
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-warning);
+  font-weight: 700;
+}
+
+.specSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.specHeading {
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.specTable {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.875rem;
+  margin-top: var(--space-2);
+}
+
+.specTable td {
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.specKey {
+  width: 9rem;
+  color: var(--color-muted-dark);
+  font-weight: 600;
+}
+
+/* Wraps the Request Customization / View warranty / View protection
+   trigger rendered below a spec value — margin lives here, on the
+   consuming context, rather than baked into the trigger button's own
+   style, since the same button components are reused elsewhere (the
+   purchase panel) with different spacing needs (a flex gap, not a
+   top margin). */
+.specAction {
+  margin-top: var(--space-2);
+}
+
+/* ── Supplier card ───────────────────────────────────────────── */
+
+.supplierCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  align-self: start;
+}
+
+.supplierHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.supplierLogo {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.supplierLabel {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.supplierName {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.supplierDivider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 0;
+}
+
+.supplierInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 0.85rem;
+  color: var(--color-muted-dark);
+}
+
+.supplierInfo p {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.sendBtn,
+.profileBtn {
+  display: block;
+  text-align: center;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  min-height: 44px;
+  line-height: 2.4;
+  text-decoration: none;
+}
+
+.sendBtn {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.sendBtn:hover {
+  background: var(--color-primary-hover);
+  color: #fff;
+  text-decoration: none;
+}
+
+.profileBtn {
+  border: 1px solid var(--color-border);
+  color: var(--color-ink);
+}
+
+.profileBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ── Reviews ─────────────────────────────────────────────────── */
+
+.reviewsSection h2 {
+  font-size: 1.25rem;
+  color: var(--color-ink);
+  margin-bottom: var(--space-4);
+}
+
+.reviewList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+@media (min-width: 48rem) {
+  .reviewList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* .reviewItem/.reviewStars moved to components/ReviewCard.module.css —
+   that markup now lives in its own component (see ReviewCard.tsx). */
+
+/* ── Recommendations / related ──────────────────────────────── */
+
+.recommendations {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionHeader h2 {
+  font-size: 1.25rem;
+  color: var(--color-ink);
+}
+
+.sectionSub {
+  margin: var(--space-1) 0 0;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: var(--space-4);
+}

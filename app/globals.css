@@ -1,0 +1,183 @@
+/* ============================================================
+   globals.css — design tokens + accessibility/performance baseline
+   Palette ported from the original vanilla site (style.css)
+   ============================================================ */
+
+:root {
+  /* Brand palette (ported from original style.css) */
+  --color-primary: #0d6efd;
+  --color-primary-hover: #0b5ed7;
+  --color-primary-light: #127fff;
+  --color-ink: #1c1c1c;
+  --color-muted: #8b96a5;
+  --color-muted-dark: #505050;
+  --color-border: #dee2e7;
+  --color-border-light: #e5e7eb;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f7fafc;
+  --color-surface-tint: #f5f8ff;
+  --color-danger: #fa3434;
+  /* --color-danger is tuned for white text on a red badge/background
+     (3.75:1 either direction — fine at that size/weight, not for body
+     text). Anything that puts red text directly on a light surface
+     needs this darker shade instead: 4.98:1 against white, passes
+     WCAG AA for normal text. */
+  --color-danger-text: #d32f2f;
+  --color-warning: #ff9017;
+  --color-success: #00b517;
+
+  /* Focus ring — never removed without this replacing it */
+  --color-focus: #0b57d0;
+
+  /* Secondary tokens referenced by component styles */
+  --color-muted-2: var(--color-muted-dark);
+  --color-border-strong: #c7ced6;
+  /* 64px, plus the 44px category row + 2px of hairline borders below it
+     = 110px total header height (measured via getBoundingClientRect,
+     not assumed) — a specific target, not a rounding accident. */
+  --header-height: 4rem;
+
+  /* Layout */
+  --max-width: 78rem;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+
+  /* Typography */
+  --font-sans: var(--font-inter), "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: var(--font-poppins), var(--font-sans);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+  background: var(--color-surface-alt);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Never remove focus indication — always provide a visible replacement.
+   box-shadow (not outline) so the ring follows border-radius on
+   pill/rounded controls instead of drawing a rectangle over them. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* Minimum comfortable touch target for interactive elements */
+button,
+a.btn,
+input[type="checkbox"],
+input[type="radio"] {
+  min-height: 44px;
+}
+
+.wrap {
+  width: min(100% - 2 * var(--space-lg), var(--max-width));
+  margin-inline: auto;
+}
+
+/* Skip link — hidden until focused, first focusable element on the page */
+.skip-link {
+  position: absolute;
+  left: var(--space-lg);
+  top: 0;
+  transform: translateY(-140%);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  padding: 0.75rem 1rem;
+  z-index: 1000;
+  font-weight: 600;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Visually-hidden but screen-reader-accessible utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

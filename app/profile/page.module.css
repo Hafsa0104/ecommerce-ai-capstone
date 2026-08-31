@@ -1,0 +1,590 @@
+/* app/profile/page.module.css */
+
+.pageContainer {
+  padding-block: var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.pageHeading {
+  font-size: 1.5rem;
+  color: var(--color-ink);
+}
+
+.demoNotice {
+  margin: 0 0 var(--space-4);
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  background: var(--color-surface-tint);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  display: inline-block;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .layout {
+    grid-template-columns: 16rem 1fr;
+  }
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.avatarWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.sidebarName {
+  font-size: 1rem;
+  color: var(--color-ink);
+}
+
+.tabNav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: none;
+  background: none;
+  color: var(--color-muted-dark);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+  min-height: 44px;
+}
+
+.tabBtn:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}
+
+.tabBtnActive {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}
+
+.content {
+  min-width: 0;
+}
+
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.panel h2 {
+  font-size: 1.15rem;
+  color: var(--color-ink);
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-3);
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.overviewEmail {
+  color: var(--color-muted-dark);
+  font-size: 0.9rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 26rem;
+}
+
+.formLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-muted-dark);
+  margin-top: var(--space-2);
+}
+
+.formInput {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  /* 1rem/16px minimum, not 0.9rem — this project's standing rule
+     against iOS zoom-on-focus for any input smaller than 16px. Also
+     backs the new OTP-code and postal-code inputs added alongside
+     this rule, which share this same class. */
+  font-size: 1rem;
+  min-height: 44px;
+  width: 100%;
+}
+
+.saveBtn {
+  margin-top: var(--space-4);
+  min-height: 44px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  padding: 0 var(--space-4);
+  align-self: flex-start;
+}
+
+.saveBtn:hover {
+  background: var(--color-primary-hover);
+}
+
+.saveBtn:disabled {
+  background: var(--color-muted);
+  cursor: not-allowed;
+}
+
+/* Same primary look as .saveBtn but for the "sign in to view your
+   account" empty state, which centers its children (align-items:
+   center) — .saveBtn's own align-self: flex-start would defeat that. */
+.signInBtn {
+  min-height: 44px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  padding: 0 var(--space-4);
+}
+
+.signInBtn:hover {
+  background: var(--color-primary-hover);
+}
+
+.signOutBtn {
+  min-height: 40px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-muted-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.signOutBtn:hover {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.savedNotice {
+  min-height: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--color-success);
+  margin: var(--space-1) 0 0;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--color-muted-dark);
+}
+
+.emptyStateLink {
+  font-weight: 600;
+}
+
+/* "Addresses" heading + the "+ Add new address" trigger, side by side —
+   same header-row pattern this page could use for any panel that needs
+   a primary action next to its title. */
+.panelHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Same bordered/primary-text "secondary trigger" language already used
+   for the product-detail dialogs' own triggers (Request a Quote etc.),
+   restated here rather than imported across component stylesheets. */
+.addAddressTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.addAddressTrigger:hover {
+  background: var(--color-surface-tint);
+}
+
+/* A responsive grid, not a single stacked column — with several
+   addresses saved this reads far better as cards side by side on
+   anything wider than a phone than as one long list. Each card's own
+   content still stays single-column internally (see .addressCard),
+   this is only about how MANY cards sit on one row. */
+.addressList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--space-3);
+}
+
+.addressCard {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  transition: box-shadow 120ms ease-out, border-color 120ms ease-out;
+}
+
+.addressCard:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 2px 8px rgba(28, 28, 28, 0.06);
+}
+
+.addressCard p {
+  margin: var(--space-1) 0;
+  color: var(--color-muted-dark);
+  font-size: 0.875rem;
+}
+
+.addressCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.addressCardName {
+  color: var(--color-ink);
+  font-size: 1rem;
+}
+
+.addressCardPhone {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.addressCardActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+/* Office/Home, shown on each saved address — same neutral pill
+   treatment as other small status badges on this page, not a new
+   color per label. */
+.addressLabelPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  background: var(--color-surface-alt);
+  color: var(--color-muted-dark);
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* The Office/Home picker in the "add address" form — two plain toggle
+   buttons (role="radio" in a role="radiogroup"), not native radio
+   inputs, so they can share this page's existing button styling. Same
+   active-state language already used elsewhere on this page/site (a
+   single accent color, carried by border + background + text color
+   together, not color alone) — not the two different accent colors a
+   reference design might use per option. */
+.labelToggleRow {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.labelToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-muted-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.labelToggleBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.labelToggleBtnActive,
+.labelToggleBtnActive:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}
+
+/* Edit/Remove sit together at the top of each card (see
+   .addressCardActions) — same icon+text shape, differing only in
+   color so Remove keeps its existing danger-red intent. */
+.editAddressBtn,
+.removeAddressBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: var(--space-1) 0;
+  min-height: 32px;
+}
+
+.editAddressBtn {
+  color: var(--color-muted-dark);
+}
+
+.editAddressBtn:hover {
+  color: var(--color-primary);
+}
+
+.removeAddressBtn {
+  color: var(--color-danger);
+}
+
+/* Inline field error, tied to its input via aria-describedby — a
+   color change alone (or a placeholder swap) isn't enough for
+   screen-reader users. Shared by the profile phone field and the
+   address dialog's postal code field. */
+.fieldError {
+  margin: 0 0 var(--space-1);
+  font-size: 0.8rem;
+  color: var(--color-danger-text);
+}
+
+/* Small always-visible "this is simulated" note — same honesty
+   pattern as .demoNotice at the top of the page, sized to sit next to
+   a single field or button instead of the whole page. */
+.inlineDemoNote {
+  margin: 0 0 var(--space-1);
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.otpBlock {
+  margin-top: var(--space-1);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--color-border);
+  max-width: 26rem;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  color: var(--color-success);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.otpPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* The demo code itself lives here, in the open — never hidden in a
+   console.log or otherwise made the user hunt for it. */
+.demoOtpBanner {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-tint);
+  color: var(--color-muted-dark);
+  font-size: 0.85rem;
+}
+
+.demoOtpBanner strong {
+  color: var(--color-ink);
+  letter-spacing: 0.05em;
+}
+
+.otpForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 12rem;
+}
+
+.otpActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+/* .saveBtn's own margin-top (meant for it sitting alone under a
+   field list) would otherwise offset it from .editAddressBtn's
+   baseline within this same row. */
+.otpActions .saveBtn {
+  margin-top: 0;
+}
+
+/* Same responsive-grid-of-cards shape as .addressList/.addressCard
+   above — one order per card, side by side on anything wider than a
+   phone. */
+.orderList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--space-3);
+}
+
+.orderCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  transition: box-shadow 120ms ease-out, border-color 120ms ease-out;
+}
+
+.orderCard:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 2px 8px rgba(28, 28, 28, 0.06);
+}
+
+.orderCardTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.orderCardId {
+  font-weight: 700;
+  color: var(--color-ink);
+  font-size: 0.9rem;
+}
+
+.orderCardDate {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+.orderItemList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--color-muted-dark);
+  font-size: 0.875rem;
+}
+
+.orderItemQty {
+  color: var(--color-muted);
+}
+
+.orderCardTotal {
+  margin-top: var(--space-1);
+  padding-top: var(--space-2);
+  border-top: 1px dashed var(--color-border);
+  font-weight: 700;
+  color: var(--color-ink);
+  font-size: 0.9rem;
+}

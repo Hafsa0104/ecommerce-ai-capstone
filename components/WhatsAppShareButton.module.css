@@ -1,0 +1,26 @@
+/* components/WhatsAppShareButton.module.css — same plain icon-button
+   shape as WishlistButton's .iconBtn (they sit right next to each
+   other, next to the product title), no resting border — a soft
+   green hover tint instead of the site's own primary blue, so it
+   still reads as "this one's different" at a glance.
+   min-width narrower than the usual 44px floor — see .iconBtn's own
+   comment for why that's an intentional, WCAG-2.5.8-covered exception
+   specifically for this closely-set pair, not a general pattern. */
+
+.shareBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 44px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-muted-dark);
+  flex-shrink: 0;
+}
+
+.shareBtn:hover {
+  background: rgba(37, 211, 102, 0.12);
+  color: #25d366;
+}

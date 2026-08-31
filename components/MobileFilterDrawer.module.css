@@ -1,0 +1,177 @@
+/* components/MobileFilterDrawer.module.css */
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-muted-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.trigger:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* Only ever rendered as a mobile substitute for the desktop sidebar
+   (see page.module.css's .desktopSidebar, hidden below this width) —
+   above it, the sidebar is always visible so this trigger has nothing
+   to open. */
+@media (min-width: 56rem) {
+  .trigger {
+    display: none;
+  }
+}
+
+.dialog {
+  margin: 0;
+  position: fixed;
+  inset: auto 0 0 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 85vh;
+  border: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  padding: 0;
+  background: var(--color-surface);
+  box-shadow: 0 -8px 32px rgba(28, 28, 28, 0.18);
+  /* Fast, transform/opacity only, per the project's motion rules — and
+     purposeful: a sheet sliding up from the bottom the trigger sits in.
+     Progressive enhancement — @starting-style is unsupported in a few
+     older engines, which just see the dialog appear instantly instead
+     of animating in. Either way it respects prefers-reduced-motion via
+     the project's existing global override (globals.css), which forces
+     every transition/animation duration to ~0 for that preference. */
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms;
+}
+
+/* display MUST be scoped to [open], not set on the bare .dialog class:
+   the browser's own dialog:not([open]) { display: none } is a
+   user-agent style, and author styles (this file) always win over UA
+   defaults regardless of specificity — an unconditional `display` here
+   would keep the dialog visible (and blocking clicks to the page below
+   it) even while closed. This is also where the sheet's own layout
+   comes from: header/footer pin in place while only the filter list
+   between them scrolls (see .body) — without it, max-height alone
+   doesn't clip/scroll anything, so tall content would just spill past
+   the dialog's edge and push "Done" off the bottom of the screen. */
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Purely decorative "grab handle" — the near-universal signal for a
+   sheet you could swipe (even though this one doesn't support swipe-to-
+   dismiss), reinforcing that it's a mobile panel and not a repositioned
+   desktop sidebar. aria-hidden in the markup, so nothing to label here. */
+.grabber {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 4px;
+  margin: var(--space-2) auto 0;
+  border-radius: 999px;
+  background: var(--color-border-strong);
+}
+
+.dialog::backdrop {
+  background: rgba(28, 28, 28, 0.4);
+  transition: opacity 200ms;
+}
+
+@starting-style {
+  .dialog[open] {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  .dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--color-muted-dark);
+  border-radius: var(--radius-sm);
+}
+
+.closeBtn:hover {
+  color: var(--color-primary);
+  background: var(--color-surface-tint);
+}
+
+/* No padding here — FilterSidebar's own (plain-variant) padding supplies
+   it, so its content doesn't get double-framed. flex:1 + min-height:0 is
+   what actually lets this scroll independently of header/footer — a
+   flex child's default min-height is auto (= "as tall as my content"),
+   which would defeat overflow:auto by growing instead of scrolling. */
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.footer {
+  flex-shrink: 0;
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.doneBtn {
+  width: 100%;
+  min-height: 44px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.doneBtn:hover {
+  background: var(--color-primary-hover);
+}

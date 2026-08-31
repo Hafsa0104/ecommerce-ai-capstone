@@ -1,0 +1,205 @@
+/* components/MobileNavDrawer.module.css */
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--color-ink);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.trigger:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}
+
+/* Only ever a mobile substitute for the header's own links + the
+   category/deliver-to/language row below it (both hidden at this same
+   width in Navbar.module.css) — above it, everything this opens is
+   already visible in the header, so the trigger has nothing to add. */
+@media (min-width: 56rem) {
+  .trigger {
+    display: none;
+  }
+}
+
+.dialog {
+  margin: 0;
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: min(85vw, 20rem);
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: var(--color-surface);
+  box-shadow: 8px 0 32px rgba(28, 28, 28, 0.18);
+  /* Transform/opacity only, per the project's motion rules — respects
+     prefers-reduced-motion via the global override in globals.css.
+     Progressive enhancement: @starting-style is unsupported in a few
+     older engines, which just see the dialog appear instantly instead
+     of sliding in. */
+  transition:
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms;
+}
+
+/* display MUST be scoped to [open], not the bare .dialog class — the
+   browser's own dialog:not([open]) { display: none } is a user-agent
+   style that author styles always win over regardless of specificity,
+   so an unconditional `display` here would keep this visible (and
+   blocking clicks) even while closed. */
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog::backdrop {
+  background: rgba(28, 28, 28, 0.4);
+  transition: opacity 200ms;
+}
+
+@starting-style {
+  .dialog[open] {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  .dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--color-muted-dark);
+  border-radius: var(--radius-sm);
+}
+
+.closeBtn:hover {
+  color: var(--color-primary);
+  background: var(--color-surface-tint);
+}
+
+/* flex:1 + min-height:0 is what actually lets this scroll independently
+   of the fixed header above it — a flex child's default min-height is
+   auto (= "as tall as my content"), which would defeat overflow:auto by
+   growing instead of scrolling. */
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-4) var(--space-6);
+}
+
+.linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.linkItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-2);
+  color: var(--color-ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+}
+
+.linkItem:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}
+
+.dealsLink {
+  color: var(--color-danger-text);
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.3rem;
+  margin-left: auto;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.divider {
+  height: 1px;
+  margin: var(--space-3) 0;
+  background: var(--color-border);
+}
+
+.sectionLabel {
+  margin: 0 0 var(--space-2);
+  padding: 0 var(--space-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.categoryLinkItem {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: var(--space-1) var(--space-2) var(--space-1) calc(var(--space-2) + 20px + var(--space-3));
+  color: var(--color-muted-dark);
+  text-decoration: none;
+  font-size: 0.875rem;
+  border-radius: var(--radius-sm);
+}
+
+.categoryLinkItem:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+}
+
+.preferencesRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+}

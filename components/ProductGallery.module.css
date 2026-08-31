@@ -1,0 +1,260 @@
+/* components/ProductGallery.module.css */
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mainImageWrap {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Overlay Previous/Next, positioned over the main image itself. Real
+   children of .mainImageWrap (see the comment in ProductGallery.tsx) so
+   hovering them keeps the zoom handlers' mousemove bubbling working —
+   not decoration bolted on top via a stacking-context sibling. Sized to
+   the same 44px touch target as every other control in this component. */
+.imageNavBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-ink);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  /* Overrides the zoom-in cursor .mainImageWrap sets for itself below —
+     this control is a button, not part of the zoomable image surface. */
+  cursor: pointer;
+}
+
+.imageNavBtnPrev {
+  left: var(--space-2);
+}
+
+.imageNavBtnNext {
+  right: var(--space-2);
+}
+
+.imageNavBtn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.imageNavBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.imageNavBtn:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* zoom-in cursor is desktop-only (see the zoomed rule below) — showing
+   it on a touch device would just be a cursor with no mouse to show it. */
+@media (hover: hover) and (pointer: fine) {
+  .mainImageWrap {
+    cursor: zoom-in;
+  }
+}
+
+.mainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Plays once per image switch (key remount). Opacity-only —
+     avoids the layout/paint cost of animating a large image's
+     transform or size. prefers-reduced-motion handled globally. */
+  animation: galleryImageFade 200ms ease-out;
+  /* Only `transform` is transitioned — transform-origin is updated on
+     every mousemove (see ProductGallery.tsx) and is deliberately left
+     untransitioned so the magnified area tracks the cursor instantly;
+     transitioning it too would make panning feel laggy/smoothed rather
+     than 1:1 with the mouse. The zoom-in/out itself (transform going
+     between none and scale(...)) still eases in over this duration.
+     prefers-reduced-motion is already handled globally (globals.css),
+     which is the right scope for this: that override targets the
+     self-playing entrance/exit easing, not the panning itself, which is
+     direct 1:1 feedback to the user's own continuous mouse movement
+     rather than autoplaying motion. */
+  transition: transform 150ms ease-out;
+}
+
+@keyframes galleryImageFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Desktop-only progressive enhancement: on a touch/coarse-pointer
+   device this rule simply never matches, so .mainImageZoomed being
+   toggled by JS there has no visual effect and normal image/gallery
+   behavior is unchanged. The wrapper's existing fixed aspect-ratio +
+   overflow:hidden (unchanged above) clips the enlarged image to the
+   same footprint — no layout shift, this is a pure paint-time transform. */
+@media (hover: hover) and (pointer: fine) {
+  .mainImageZoomed {
+    transform: scale(2.5);
+    will-change: transform;
+  }
+}
+
+.thumbNav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* Single scrollable row, not a wrap — min-width: 0 lets this flex item
+   shrink below its content's intrinsic width (the flex default is
+   min-width: auto, which would instead push .thumbNav/.gallery wider);
+   once it can shrink, overflow-x: auto turns the overflow into an
+   internal scroll region instead of a second line. The scrollbar itself
+   is hidden (still fully scrollable via drag/trackpad/arrow keys —
+   this only hides the OS-drawn bar, native focus-follows-scroll still
+   brings an off-screen thumbnail into view when arrow-key navigation
+   focuses it) across all three engines, since there's no single
+   standard property yet.
+
+   The padding is not spacing/decoration — it's load-bearing. Any
+   non-visible overflow (auto/hidden/scroll) on an element clips
+   anything a descendant paints outside that element's own padding box,
+   .thumbBtn:focus-visible's outline included, exactly the way an
+   ancestor's overflow:hidden already clips a descendant's box-shadow
+   elsewhere in this file. Without room here, overflow-y: hidden (needed
+   to keep this a single line instead of a wrap) would flatten the
+   outline's offset away on every side, leaving just the active-state
+   border — which is a near-identical blue — so "selected" and "focused"
+   would collapse into one ring with no visible gap between them. The
+   padding reserves exactly that gap inside the clip boundary instead. */
+.thumbList {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 0;
+  padding: var(--space-2);
+  margin: calc(var(--space-2) * -1);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* legacy Edge/IE */
+}
+
+.thumbList::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, current Edge */
+}
+
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.navBtn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Native `disabled`, not aria-disabled: at the first/last image there is
+   nowhere for this control to go, so it should be unfocusable and
+   inert, not just styled to look that way — the same distinction the
+   quantity `−` button below now makes at its own floor of 1. */
+.navBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* No custom focus-visible rule here on purpose — .navBtn isn't clipped
+   by any ancestor's overflow (it's a plain sibling of .thumbList, not
+   nested inside it), so there's no reason to opt out of the global
+   button:focus-visible rule in globals.css. An earlier pass gave it its
+   own `outline`-based ring to match .thumbBtn's (then-necessary)
+   workaround below, but outline's border-radius handling is only an
+   approximation in Chromium/Firefox — at anything other than 100%
+   zoom/OS display scaling (a default, not an edge case, on a lot of
+   Windows machines) it visibly distorts a small, tightly-rounded square
+   like this one into an oversized rounded blob. box-shadow always
+   traces border-radius exactly, at any zoom — which is precisely why
+   the global rule uses it instead of outline in the first place. */
+
+.thumbBtn {
+  padding: 0;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: none;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.thumbBtn:hover {
+  border-color: var(--color-primary-light);
+}
+
+.thumbBtnActive {
+  border-color: var(--color-primary);
+}
+
+/* The image crop moved to .thumbImageClip (an inner, non-focusable
+   wrapper) specifically so .thumbBtn itself no longer needs its own
+   overflow:hidden. That used to force this button onto the same
+   outline-based workaround as .navBtn above — for the same reason, and
+   with the same zoom-distortion cost, since this control has a real
+   border-radius corner (unlike the circular overlay arrows on the main
+   image, where a round shape has no corner for outline's approximation
+   to get wrong). Two box-shadows, not one, reproduce the gap an
+   outline-offset used to give: the smaller, surface-colored one punches
+   a visible band right at the border; the larger, focus-colored one
+   only shows through where the first doesn't cover it. That keeps
+   "selected" (the border/tint above, always present) visually separate
+   from "focused" (this ring, only while tabbed/arrowed to) exactly as
+   before, without outline's distortion at non-100% zoom. */
+.thumbBtn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-surface),
+    0 0 0 5px var(--color-focus);
+}
+
+.thumbImageClip {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

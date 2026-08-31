@@ -1,0 +1,470 @@
+/* components/RequestDialogs.module.css — shared styles for the
+   prototype interactions built on Dialog: Request a Quote, Request
+   Customization, the Warranty/Protection info dialogs, and AuthModal
+   (sign in / create account). One shared module instead of duplicating
+   the same trigger/field/button/note styles across each. */
+
+/* ---- Triggers (rendered outside the dialog, in the page/panel) ---- */
+
+.secondaryTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.secondaryTrigger:hover {
+  background: var(--color-surface-tint);
+}
+
+.infoTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.infoTrigger:hover {
+  color: var(--color-primary-hover);
+}
+
+/* ---- Form layout (Quote / Customization) ---- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* Wraps AuthModal's Password label together with "Forgot password?"
+   on the same line (space-between) — same reasoning and pairing as
+   AuthSplitPage.module.css's own .labelRow/.forgotBtn; kept as a
+   separate copy here rather than a shared import since these two
+   components already each style their own fields from their own CSS
+   Module rather than a shared one. */
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* A real <button>, not an <a> — flips local form state (see
+   enterForgotMode/exitForgotMode in AuthModal), nothing to navigate
+   to. Styled to read as a link, and opts out of the global 44px
+   button min-height for the same reason AuthSplitPage's copy does:
+   forced to that height it would dominate the label row (or, reused
+   for "Back to sign in", look like a second submit button) it sits
+   next to. */
+.forgotBtn {
+  min-height: auto;
+  padding: var(--space-1) 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.forgotBtn:hover {
+  color: var(--color-primary-hover);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.readonlyValue {
+  margin: 0 0 var(--space-3);
+  color: var(--color-muted-dark);
+  font-size: 0.9rem;
+}
+
+.input,
+.textarea {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  width: 100%;
+}
+
+.input {
+  min-height: 44px;
+}
+
+.input:hover,
+.textarea:hover {
+  border-color: var(--color-border-strong);
+}
+
+/* Supplements the error message below the field (role="alert",
+   associated via aria-describedby) — never the only signal, a red
+   border alone wouldn't say what's wrong or that anything's wrong to a
+   screen reader user, which is exactly why that text pairing exists. */
+.input[aria-invalid="true"] {
+  border-color: var(--color-danger-text);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 5rem;
+}
+
+.fileInput {
+  font-size: 0.875rem;
+  color: var(--color-ink);
+}
+
+.hint {
+  margin: var(--space-1) 0 0;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.selectedFile {
+  margin: var(--space-2) 0 0;
+  color: var(--color-muted-dark);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.removeFileBtn {
+  border: none;
+  background: none;
+  color: var(--color-danger-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-height: 24px;
+  padding: 0;
+}
+
+.errorText {
+  margin: var(--space-1) 0 0;
+  color: var(--color-danger-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Whole-form validation result for AuthModal specifically (wrong email
+   format, an unrecognized email/password pair) — deliberately a
+   separate, more prominent treatment from .errorText's small inline
+   per-field note above, which QuoteRequestDialog/CustomizationRequest-
+   Dialog still use unchanged for their own field-level errors. No new
+   color: a light tint + border of the same --color-danger-text this
+   project already uses for error text elsewhere, just applied as a
+   background/border here instead of bare text. */
+.authAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(211, 47, 47, 0.08);
+  border: 1px solid rgba(211, 47, 47, 0.35);
+  border-radius: var(--radius-sm);
+  color: var(--color-danger-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.authAlertIcon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* AuthModal's Forgot-password code stage — same "here's your demo
+   code" banner as AuthSplitPage.module.css's own copy (see its
+   comment); duplicated rather than shared since these two components
+   already each style their own fields from their own CSS Module. */
+.demoOtpBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-muted-dark);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.demoOtpBanner strong {
+  color: var(--color-ink);
+  letter-spacing: 0.05em;
+}
+
+/* Cautionary/disclosure text — "Important: ..." in the info dialogs,
+   and the "this is a frontend prototype" disclosure in the request
+   forms. Same visual treatment for both: a quiet, boxed-off note that
+   reads as secondary to the main content above it. */
+.note {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  color: var(--color-muted-dark);
+  font-size: 0.8rem;
+}
+
+/* AuthModal's prototype notice specifically: same quiet callout look as
+   .note (composed, not duplicated), plus a small leading info icon —
+   an informational callout, not an error, so this reuses .note's
+   surface-alt background rather than any danger/warning color. A
+   *separate* class from .note itself rather than changing .note's own
+   display to flex: .note is also used as a plain <p> with only text
+   content elsewhere (Quote/Customization's own disclosure lines), and
+   flexing a single anonymous text node like that risks changing how it
+   wraps — not worth touching for those callers' sake. */
+.noteWithIcon {
+  composes: note;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  /* Tighter than .note's own margin-top/padding — part of fitting this
+     modal on screen without scrolling; .note's other callers
+     (Quote/Customization's own disclosure lines) are untouched since
+     they use .note directly, not this class. */
+  margin-top: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+}
+
+.noteWithIcon p {
+  margin: 0;
+}
+
+.noteIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-muted-dark);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.primaryBtn {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.primaryBtn:hover {
+  background: var(--color-primary-hover);
+}
+
+.secondaryBtn {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.secondaryBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* Destructive confirmation action (e.g. "Remove" in ConfirmDialogContext) —
+   --color-danger, not --color-danger-text: the comment on that token in
+   globals.css says it's the one tuned for white text on a red
+   background, which is exactly this. */
+.dangerBtn {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.dangerBtn:hover {
+  filter: brightness(0.92);
+}
+
+/* ---- Success state ---- */
+
+.successState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-4) 0;
+}
+
+.successIcon {
+  color: var(--color-success);
+}
+
+.successText {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-ink);
+}
+
+/* ---- AuthModal (sign in / create account) ---- */
+
+/* No .authLogo here anymore — the logo lockup was removed (see
+   AuthModal.tsx's own comment) mainly to help this modal fit on screen
+   without an internal scroll on shorter viewports. */
+
+/* margin-bottom trimmed from the shared .readonlyValue's own spacing —
+   this stays compact so the modal's content fits in view without
+   scrolling on common phone/short-desktop heights; not shared with
+   .readonlyValue's other callers (Quote/Customization's read-only
+   product-name display), which don't have that constraint. */
+.authSubtext {
+  composes: readonlyValue;
+  margin-bottom: var(--space-1);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+/* A real segmented control, not adjacent inline text: the pill
+   container (surface-alt background) plus each option's own hit area
+   is what keeps "Sign In" and "Create Account" from ever reading as one
+   run-together label, regardless of viewport width. Active vs inactive
+   is carried by three cues together — background, color, AND a border —
+   not color alone. */
+.modeTabs {
+  display: flex;
+  gap: var(--space-1);
+  padding: 4px;
+  margin-bottom: var(--space-1);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+}
+
+/* AuthModal's own field spacing — a smaller margin-bottom than the
+   shared .field (used by QuoteRequestDialog/CustomizationRequestDialog,
+   left untouched) so three stacked fields (Create Account: name, email,
+   password) plus everything below still fits without an internal
+   scroll on common phone/short-desktop heights. Not `composes: field`
+   plus an override: identical otherwise, simpler to just state directly. */
+.authField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-1);
+}
+
+.modeTab {
+  flex: 1;
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-muted-dark);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.modeTab:hover {
+  color: var(--color-ink);
+}
+
+.modeTabActive,
+.modeTabActive:hover {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(28, 28, 28, 0.12);
+}
+
+/* Buttons center their own text by default (UA stylesheet), so no
+   extra alignment is needed here beyond the full width. */
+.fullWidthBtn {
+  composes: primaryBtn;
+  width: 100%;
+}
+
+.guestBtn {
+  composes: secondaryBtn;
+  width: 100%;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.fullPageLink {
+  margin: var(--space-1) 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+/* ---- Info dialogs (Warranty / Protection) ---- */
+
+.infoBody p {
+  margin: 0 0 var(--space-3);
+  color: var(--color-muted-dark);
+  font-size: 0.9rem;
+}
+
+.infoBody p:last-child {
+  margin-bottom: 0;
+}
+
+.infoBody strong {
+  color: var(--color-ink);
+}
