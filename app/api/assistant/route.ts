@@ -229,6 +229,22 @@ async function runConversation(
     });
 
     if (!res.ok || !res.body) {
+      // Logged server-side only (terminal/server logs, never sent to
+      // the client) — the client always gets the same safe, generic
+      // message below regardless of what this says. Without this, a
+      // real upstream failure (wrong/expired key, rate limit, model
+      // misconfiguration, etc.) was previously indistinguishable from
+      // any other cause once it reached the browser as one fixed
+      // string — this is what makes that diagnosable from the server
+      // console instead of only guessable.
+      try {
+        const bodyText = await res.clone().text();
+        console.error(
+          `[assistant route] upstream non-OK: status=${res.status} statusText=${res.statusText} body=${bodyText.slice(0, 500)}`
+        );
+      } catch (logErr) {
+        console.error("[assistant route] upstream non-OK, and failed to read body for logging:", logErr);
+      }
       // Free-tier rate limits (20 req/min, 200 req/day per OpenRouter's
       // published free-model limits) surface as 429; treat any
       // non-2xx upstream response the same honest way — never invent
@@ -275,6 +291,8 @@ async function runConversation(
           }
 
           if (payload.error) {
+            // Server-side only, same reasoning as the non-OK branch above.
+            console.error("[assistant route] mid-stream error payload:", JSON.stringify(payload.error).slice(0, 500));
             throw new UpstreamUnavailableError(
               "The free AI service is temporarily unavailable right now. Please try again shortly."
             );
