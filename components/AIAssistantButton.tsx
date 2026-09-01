@@ -23,6 +23,7 @@ export default function AIAssistantButton() {
       aria-expanded={open}
       aria-haspopup="dialog"
       aria-controls="ai-assistant-panel"
+      aria-label="AI Assistant"
     >
       <Sparkles size={18} aria-hidden="true" />
       <span className={styles.label}>AI Assistant</span>
