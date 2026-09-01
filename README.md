@@ -214,6 +214,8 @@ No other environment variables are read anywhere in this codebase.
 | `npm run build` | Creates an optimized production build. |
 | `npm run start` | Runs the production build (run `npm run build` first). |
 | `npm run lint` | Runs ESLint against the project. |
+| `npm test` | Runs the automated Vitest test suite. |
+| `npm run test:coverage` | Runs the Vitest test suite and generates a V8 coverage report. |
 
 ## Deployment
 
@@ -230,9 +232,49 @@ Deploying requires setting `OPENROUTER_API_KEY` (and optionally `OPENROUTER_MODE
 
 ## Testing
 
-TradeHub was validated through manual functional testing and developer-side verification of its key user flows: storefront navigation, category and keyword search, filtering/sorting/pagination, cart and checkout, wishlist, sign-in/sign-up and password reset, profile and address management, order history, currency and delivery-country selection, and responsive/mobile behavior. ShopMate was verified end-to-end against a live OpenRouter key — a basic greeting, a product-search query returning real catalog product cards linked to real product pages, a follow-up question that correctly retained prior conversation context, a deliberately unmatchable query answered honestly with no fabricated products, and Stop mid-response leaving the partial reply intact with the panel still usable. Type-checking and linting (`npm run build`'s TypeScript pass and `npm run lint`) run clean on the current codebase.
+TradeHub has been validated through both automated tests and manual functional testing.
 
-This verification was manual and developer-driven rather than an automated, CI-enforced suite — a natural next step for the project is described under [Future Improvements](#future-improvements).
+### Automated Tests
+
+The project uses **Vitest** with **React Testing Library** for automated testing. The current test suite contains **37 tests across 3 test files**:
+
+- `lib/ai.test.ts` — **10 tests**
+- `services/productService.test.ts` — **17 tests**
+- `components/QuantityStepper.test.tsx` — **10 tests**
+
+`npm test` passes all 37 tests. `npm run test:coverage` also passes all 37 tests, and currently reports:
+
+- **Statements:** 9.73%
+- **Branches:** 6.18%
+- **Functions:** 9.18%
+- **Lines:** 9.67%
+
+These automated tests cover AI configuration and logic (`lib/ai.ts`), product-service behavior (`services/productService.ts`), and the `QuantityStepper` component — including quantity changes, minimum-value enforcement, keyboard input, and accessible button names. Much of the rest of the UI (larger components, pages, and several services) does not yet have dedicated automated tests, which is why the overall percentages above are still low even though the tested areas themselves have substantially higher coverage — for example, `lib/ai.ts` and `services/productData.ts` currently have **100% statement and line coverage**. This is not full application coverage, and the README does not claim it is.
+
+`npm run lint` and `npm run build` also pass with no errors on the current codebase. There is no CI configuration in this repository, so these commands are run manually rather than automatically on every change — see [Future Improvements](#future-improvements).
+
+### Manual Testing
+
+The application has also been manually tested across the major user flows, including:
+
+- Storefront navigation
+- Category and keyword search
+- Filtering, sorting, and pagination
+- Product detail pages
+- Cart and checkout
+- Wishlist
+- Sign-in and sign-up
+- Password reset flow
+- Profile and address management
+- Order history
+- Currency and delivery-country selection
+- Responsive/mobile behavior
+- Supplier messaging
+- ShopMate AI interaction
+
+ShopMate was tested against a live OpenRouter configuration for product-search and conversational behavior, including product recommendations grounded in the real catalog, follow-up questions, handling of unmatched searches, and cancellation using the Stop control.
+
+This verification is currently developer-driven rather than CI-enforced. Expanding automated component and end-to-end coverage, together with adding continuous integration, remains a future improvement.
 
 ## Performance
 
@@ -302,12 +344,15 @@ These are deliberate scope decisions for a frontend-focused capstone project, no
 ## Future Improvements
 
 - A real backend and database, replacing `localStorage`-based persistence.
-- Production-grade authentication (hashed credentials, real sessions).
+- Production-grade authentication with securely hashed credentials and real server-side sessions.
 - Real payment processing integration.
-- Persisting ShopMate's conversation across page reloads.
-- An automated test suite — unit tests for the pure `services/`/`lib/` logic, plus component or end-to-end coverage for a critical journey like product search or checkout.
-- A formal accessibility audit (automated tooling plus a manual screen-reader pass) and a recorded Lighthouse/performance audit.
+- Persisting ShopMate conversations across page reloads and visits.
+- **Expand automated test coverage** — add tests for additional services, components, authentication flows, cart/checkout behavior, ShopMate UI interactions, and critical end-to-end user journeys.
+- Adding continuous integration so tests, linting, and production builds run automatically on every pull request.
+- A formal accessibility audit using automated tooling together with a manual screen-reader pass.
+- A recorded Lighthouse performance audit against the production deployment.
 - Production monitoring and error tracking.
+- Further performance optimization as the catalog and application functionality grow.
 
 ## Reflection
 
