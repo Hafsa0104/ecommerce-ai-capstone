@@ -34,7 +34,7 @@
 }
 
 .tagline {
-  color: var(--color-muted);
+  color: #64707d;
   margin: 0;
   font-size: 0.9rem;
 }
@@ -79,7 +79,7 @@
 .copyright {
   margin: 0;
   font-size: 0.8rem;
-  color: var(--color-muted);
+  color: #64707d;
 }
 
 .sitemapLink {

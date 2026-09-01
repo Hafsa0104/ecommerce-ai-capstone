@@ -48,7 +48,7 @@
   position: absolute;
   top: var(--space-2);
   left: var(--space-2);
-  background: var(--color-danger);
+  background: var(--color-danger-text);
   color: #fff;
   font-size: 0.7rem;
   font-weight: 700;
@@ -93,7 +93,7 @@
 }
 
 .oldPrice {
-  color: var(--color-muted);
+  color: #64707d;
   text-decoration: line-through;
   font-size: 0.8rem;
 }
@@ -117,7 +117,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: var(--color-success);
+  color: #0a7a1f;
   font-size: 0.75rem;
   margin-top: 2px;
 }
